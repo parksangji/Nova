@@ -1,0 +1,56 @@
+# --- [Standard Java/Gradle] ---
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+/out/
+/bin/
+
+# --- [Secret & Configuration] ---
+# 민감한 정보가 포함된 설정 파일은 절대 ignore! 
+# 대신 application-sample.yml 같은 가이드 파일을 공유하세요.
+**/src/main/resources/application-*.yml
+**/src/main/resources/application-*.properties
+!**/src/main/resources/application.yml
+.env
+*.key
+*.pem
+
+# --- [IntelliJ IDEA] ---
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+# 개인 설정 및 데이터베이스 연결 정보 제외
+.idea/dataSources/
+.idea/libraries/
+.idea/usage.statistics.xml
+.idea/workspace.xml
+
+# --- [STS / Eclipse] ---
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# --- [Visual Studio Code] ---
+.vscode/
+*.code-workspace
+
+# --- [Log Files] ---
+# 실행 중 발생하는 로그 파일 제외
+*.log
+logs/
+
+# --- [OS Specific] ---
+.DS_Store
+Thumbs.db
+
+# --- [Build / Package] ---
+*.jar
+*.war
+*.ear
