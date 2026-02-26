@@ -6,12 +6,7 @@ build/
 /out/
 /bin/
 
-# --- [Secret & Configuration] ---
-# 민감한 정보가 포함된 설정 파일은 절대 ignore! 
-# 대신 application-sample.yml 같은 가이드 파일을 공유하세요.
-**/src/main/resources/application-*.yml
-**/src/main/resources/application-*.properties
-!**/src/main/resources/application.yml
+**/src/main/resources/application.yaml
 .env
 *.key
 *.pem
