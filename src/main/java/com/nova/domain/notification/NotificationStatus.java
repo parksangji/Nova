@@ -1,4 +1,4 @@
-package com.nova.domain.constants;
+package com.nova.domain.notification;
 
 public enum NotificationStatus {
     PENDING,
