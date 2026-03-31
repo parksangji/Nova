@@ -1,0 +1,12 @@
+package com.nova.controller.dto;
+
+import com.nova.domain.NotificationType;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+public record NotificationCreateRequest(
+        @NotBlank String recipient,
+        @NotBlank String content,
+        @NotNull NotificationType type
+) {
+}

@@ -49,3 +49,6 @@ Thumbs.db
 *.jar
 *.war
 *.ear
+/http/notifications.http
+/data/nova.mv.db
+/data/nova.trace.db
