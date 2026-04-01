@@ -4,7 +4,9 @@ import com.nova.controller.dto.NotificationCreateRequest;
 import com.nova.domain.Notification;
 import com.nova.domain.NotificationType;
 import com.nova.repository.NotificationRepository;
+import com.nova.service.event.NotificationSavedEvent;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -14,12 +16,12 @@ import static org.mockito.Mockito.*;
 class NotificationCommandServiceTest {
 
     private final NotificationRepository notificationRepository = mock(NotificationRepository.class);
-    private final NotificationAsyncDispatchService notificationAsyncDispatchService = mock(NotificationAsyncDispatchService.class);
+    private final ApplicationEventPublisher eventPublisher = mock(ApplicationEventPublisher.class);
     private final NotificationCommandService notificationCommandService =
-            new NotificationCommandService(notificationRepository, notificationAsyncDispatchService);
+            new NotificationCommandService(notificationRepository, eventPublisher);
 
     @Test
-    void savesNotificationAndDispatchesAsync() {
+    void savesNotificationAndPublishesEvent() {
         Notification notification = Notification.builder()
                 .recipient("01084627902")
                 .content("content")
@@ -27,7 +29,6 @@ class NotificationCommandServiceTest {
                 .build();
         ReflectionTestUtils.setField(notification, "id", 1L);
         when(notificationRepository.save(any(Notification.class))).thenReturn(notification);
-        doNothing().when(notificationAsyncDispatchService).sendNotificationAsync(any(Long.class));
 
         Long notificationId = notificationCommandService.requestNotification(
                 new NotificationCreateRequest("01084627902", "content", NotificationType.KAKAO)
@@ -35,6 +36,6 @@ class NotificationCommandServiceTest {
 
         assertThat(notificationId).isEqualTo(1L);
         verify(notificationRepository).save(any(Notification.class));
-        verify(notificationAsyncDispatchService).sendNotificationAsync(1L);
+        verify(eventPublisher).publishEvent(new NotificationSavedEvent(1L));
     }
 }

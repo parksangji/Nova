@@ -38,6 +38,7 @@ class NotificationDispatchServiceTest {
         assertThat(status).isEqualTo(NotificationStatus.SENT);
         assertThat(notification.getStatus()).isEqualTo(NotificationStatus.SENT);
         verify(sender).send(notification);
+        verify(notificationRepository).save(notification);
     }
 
     @Test
@@ -58,6 +59,7 @@ class NotificationDispatchServiceTest {
         assertThat(status).isEqualTo(NotificationStatus.FAILED);
         assertThat(notification.getStatus()).isEqualTo(NotificationStatus.FAILED);
         assertThat(notification.getFailureReason()).contains("send failed");
+        verify(notificationRepository).save(notification);
     }
 
     @Test

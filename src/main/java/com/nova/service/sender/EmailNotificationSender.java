@@ -2,6 +2,7 @@ package com.nova.service.sender;
 
 import com.nova.domain.Notification;
 import com.nova.domain.NotificationType;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,15 +21,27 @@ public class EmailNotificationSender implements NotificationSender {
     @Value("${spring.mail.host:}")
     private String host;
 
-    @Value("${spring.mail.username}")
+    @Value("${spring.mail.username:}")
     private String username;
 
     @Value("${spring.mail.password:}")
     private String password;
 
+    @PostConstruct
+    public void validateMailConfiguration() {
+        if (!StringUtils.hasText(host)) {
+            throw new IllegalStateException("Email delivery is not configured: spring.mail.host is blank.");
+        }
+        if (!StringUtils.hasText(username)) {
+            throw new IllegalStateException("Email delivery is not configured: spring.mail.username is blank.");
+        }
+        if (!StringUtils.hasText(password)) {
+            throw new IllegalStateException("Email delivery is not configured: spring.mail.password is blank.");
+        }
+    }
+
     @Override
     public void send(Notification notification) {
-        validateMailConfiguration();
         log.info("Attempting to send Email to: {}", notification.getRecipient());
 
         SimpleMailMessage message = new SimpleMailMessage();
@@ -46,17 +59,5 @@ public class EmailNotificationSender implements NotificationSender {
     @Override
     public boolean supports(NotificationType type) {
         return type == NotificationType.EMAIL;
-    }
-
-    private void validateMailConfiguration() {
-        if (!StringUtils.hasText(host)) {
-            throw new IllegalStateException("Email delivery is not configured: spring.mail.host is blank.");
-        }
-        if (!StringUtils.hasText(username)) {
-            throw new IllegalStateException("Email delivery is not configured: spring.mail.username is blank.");
-        }
-        if (!StringUtils.hasText(password)) {
-            throw new IllegalStateException("Email delivery is not configured: spring.mail.password is blank.");
-        }
     }
 }

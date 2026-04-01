@@ -3,7 +3,9 @@ package com.nova.service;
 import com.nova.controller.dto.NotificationCreateRequest;
 import com.nova.domain.Notification;
 import com.nova.repository.NotificationRepository;
+import com.nova.service.event.NotificationSavedEvent;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class NotificationCommandService {
 
     private final NotificationRepository notificationRepository;
-    private final NotificationAsyncDispatchService notificationAsyncDispatchService;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public Long requestNotification(NotificationCreateRequest request) {
@@ -23,7 +25,7 @@ public class NotificationCommandService {
                 .build();
 
         Notification savedNotification = notificationRepository.save(notification);
-        notificationAsyncDispatchService.sendNotificationAsync(savedNotification.getId());
+        eventPublisher.publishEvent(new NotificationSavedEvent(savedNotification.getId()));
         return savedNotification.getId();
     }
 }

@@ -52,3 +52,7 @@ Thumbs.db
 /http/notifications.http
 /data/nova.mv.db
 /data/nova.trace.db
+
+# --- [Application Configs] ---
+**/application*.yml
+**/application*.yaml

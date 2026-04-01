@@ -46,13 +46,7 @@ class EmailNotificationSenderTest {
         setField(sender, "username", "");
         setField(sender, "password", "app-password");
 
-        Notification notification = Notification.builder()
-                .recipient("receiver@example.com")
-                .content("hello")
-                .type(NotificationType.EMAIL)
-                .build();
-
-        assertThatThrownBy(() -> sender.send(notification))
+        assertThatThrownBy(() -> sender.validateMailConfiguration())
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("spring.mail.username is blank");
     }
@@ -65,13 +59,7 @@ class EmailNotificationSenderTest {
         setField(sender, "username", "sender@example.com");
         setField(sender, "password", "");
 
-        Notification notification = Notification.builder()
-                .recipient("receiver@example.com")
-                .content("hello")
-                .type(NotificationType.EMAIL)
-                .build();
-
-        assertThatThrownBy(() -> sender.send(notification))
+        assertThatThrownBy(() -> sender.validateMailConfiguration())
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("spring.mail.password is blank");
     }
